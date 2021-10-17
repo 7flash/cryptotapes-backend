@@ -10,13 +10,15 @@ const { header } = server.reply
 const port = 3001
 
 const corsMiddleware = server.utils.modern(
-    cors({
-        origin: ['http://localhost:8080']
-    })
+    cors()
 )
 
 server({ port }, corsMiddleware, [
     post('/record', ctx => {
+        console.log(ctx.ip)
+
+        console.dir(ctx.url)
+
         console.dir(ctx.params)
 
         console.dir(ctx.query)
