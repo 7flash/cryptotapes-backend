@@ -5,6 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "upgrade": "git pull && npm run restart-server",
+    "deploy": "git add . && git commit -m \"update\" && git push",
     "clean": "sh clean.sh",
     "start-server": "pm2 start --name server server.js && pm2 logs server",
     "restart-server": "pm2 restart --name server server.js && pm2 logs server",
@@ -14,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "server": "^1.0.36"
   }
 }
