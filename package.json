@@ -1,0 +1,19 @@
+{
+  "type": "module",
+  "name": "cryptotapes-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "sh clean.sh",
+    "start-server": "pm2 start --name server server.js && pm2 logs server",
+    "restart-server": "pm2 restart --name server server.js && pm2 logs server",
+    "start-maker": "pm2 start --name maker maker.js && pm2 logs maker",
+    "restart-maker": "pm2 restart --name maker maker.js && pm2 logs maker"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "server": "^1.0.36"
+  }
+}
