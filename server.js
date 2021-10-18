@@ -6,7 +6,7 @@ server({
     port: 3001,
     security: false
 }, [
-    post('/create', (ctx) => {
+    post('/record', (ctx) => {
         console.dir(ctx)
         
         return 'OK'
