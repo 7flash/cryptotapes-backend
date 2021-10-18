@@ -6,7 +6,11 @@ async function main() {
     const tape = new TapeObject()
 
     const query = new Query(tape)
-    
+
+    query.find()
+
+    query.equalTo()
+
     // const allTapes = await query.findAll()
 
     // console.dir(allTapes)

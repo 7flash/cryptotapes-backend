@@ -5,12 +5,12 @@
   "main": "index.js",
   "scripts": {
     "clean": "sh clean.sh",
-    "pull": "git pull && npm run restart-server",
+    "pull": "git pull && npm run restart-server && npm run restart-maker && pm2 logs",
     "push": "git add . && git commit -m \"update\" && git push",
     "start-server": "pm2 start --name server server.js && pm2 logs server",
-    "restart-server": "pm2 restart --name server server.js && pm2 logs server",
+    "restart-server": "pm2 restart --name server server.js --no-autorestart && pm2 logs server",
     "start-maker": "pm2 start --name maker maker.js && pm2 logs maker",
-    "restart-maker": "pm2 restart --name maker maker.js && pm2 logs maker"
+    "restart-maker": "pm2 restart --name maker maker.js --no-autorestart && pm2 logs maker"
   },
   "author": "",
   "license": "ISC",
