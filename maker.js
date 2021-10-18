@@ -148,8 +148,6 @@ async function watchTapes() {
 
         const t = `Token #${tokenId}`
     
-        console.time(t)
-
         console.timeLog(t, `found tape recording ... ${e.filename}`)
 
         try {
