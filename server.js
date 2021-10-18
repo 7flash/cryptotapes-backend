@@ -31,6 +31,12 @@ server({
     port: 3001,
     security: false
 }, [
+    get('/token/:tokenId', async (ctx) => {
+        const { tokenId } = ctx.params
+
+        // read from moralis
+    }),
+
     post('/afterSaveTape', async (ctx) => {
         const { audio, tokenId } = ctx.body.object
         

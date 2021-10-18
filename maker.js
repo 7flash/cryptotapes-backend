@@ -2,6 +2,7 @@ import util from 'util'
 import { exec } from 'child_process'
 import { watch, writeFile, readFile } from 'fs/promises'
 import path from 'path'
+import moralis from 'moralis'
 
 const execAsync = util.promisify(exec)
 
@@ -56,6 +57,38 @@ async function makeJsonMetadata (e) {
     await writeFile(`metadata/${tokenId}.json`, JSON.stringify(jsonMetadata))
 }
 
+async function uploadIpfs(filePath) {
+    return 'ipfs://'
+}
+
+async function saveMoralisVideo(tokenId, videoUrl) {
+    const t = new TapeObject()
+
+    const query = Query(t)
+
+    query.equalTo("tokenId", tokenId)
+
+    const results = await query.find()
+
+    console.dir(results)
+
+    const tape = results[0]
+
+    tape.video = videoUrl
+
+    await tape.save()
+}
+
+async function updateMoralisMetadata (e) {
+    const tokenId = path.parse(e.filename).name
+
+    // upload video to IPFS via moralis / pinata
+
+    // update moralis object - then user can edit on frontend etc
+
+    // and endpoint to read from moralis
+}
+
 async function watchAudio() {
     const audio = watch('audio')
 
@@ -102,13 +135,21 @@ async function watchTapes() {
 
         console.timeLog(t, 'found tape recording ... generate metadata')
 
-        await makeJsonMetadata(e)
+        const url = await uploadIpfs()
+
+        await saveMoralisVideo(tokenId, url)
+
+        // await makeJsonMetadata(e)
 
         console.timeEnd(t)
     }
 }
 
-function main() {
+async function main() {
+    moralis.initialize(
+        process
+    )
+
     watchAudio()
 
     watchShell()
