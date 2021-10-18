@@ -6,7 +6,7 @@ import path from 'path'
 const { get, post } = server.router
 
 async function saveAudio({ tokenId, ethAddress, url }) {
-    const audioPath = path.join(__dirname, `audio/${tokenId}.webm`)
+    const audioPath = `~/cryptotapes-backend/audio/${tokenId}.webm`
     
     const writer = fs.createWriteStream(audioPath)
     
