@@ -5,9 +5,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "upgrade": "git pull && npm run restart-server",
-    "deploy": "git add . && git commit -m \"update\" && git push",
     "clean": "sh clean.sh",
+    "pull": "git pull && npm run restart-server",
+    "push": "git add . && git commit -m \"update\" && git push",
     "start-server": "pm2 start --name server server.js && pm2 logs server",
     "restart-server": "pm2 restart --name server server.js && pm2 logs server",
     "start-maker": "pm2 start --name maker maker.js && pm2 logs maker",
@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.23.0",
     "cors": "^2.8.5",
     "server": "^1.0.36"
   }
