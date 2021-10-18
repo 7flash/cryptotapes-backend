@@ -17,11 +17,13 @@ moralis.initialize(
 )
 
 moralis.serverURL = process.env.MORALIS_SERVER_URL
+moralis.masterKey = process.env.MORALIS_KEY
 
 moralis.Object.registerSubclass(TapeObject.tableName, TapeObject)
 
 module.exports = {
     TapeObject: TapeObject,
     Query: moralis.Query,
-    Object: moralis.Object
+    Object: moralis.Object,
+    File: moralis.File
 }

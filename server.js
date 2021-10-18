@@ -1,7 +1,8 @@
-import server from 'server'
-import fs from 'fs'
-import axios from 'axios'
-import path from 'path'
+const server = require('server')
+const fs = require('fs')
+const axios = require('axios')
+const path = require('path')
+const { TapeObject, Query } = require('./moralis')
 
 const { get, post } = server.router
 
@@ -34,6 +35,39 @@ server({
     get('/token/:tokenId', async (ctx) => {
         const { tokenId } = ctx.params
 
+        const t = new TapeObject()
+
+        const query = new Query(t)
+
+        query.equalTo('tokenId', Number.parseInt(tokenId))
+
+        const tape = await query.first()
+
+        if (tape) {
+            return {
+                'name': tape.get('title'),
+                'image': tape.get('video').ipfs(),
+                'external_url': tape.get('video').ipfs(),
+                'description': tape.get('lyrics'),
+                'attributes': [
+                    {
+                        'trait_type': 'rarity',
+                        'value': 'rare'
+                    },
+                    {
+                        'trait_type': 'link',
+                        'display_value': 'Audio Link',
+                        'value': tape.get('audio')
+                    }
+                ]
+            }
+        } else {
+            return {
+                'name': 'Empty Tape',
+                'image': ''
+            }
+        }
+
         // read from moralis
     }),
 
@@ -52,4 +86,4 @@ server({
 
         return 'OK'
     })
-])
+]).then((ctx) => console.log('server listening on port ' + ctx.options.port))

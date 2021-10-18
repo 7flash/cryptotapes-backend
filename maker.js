@@ -1,8 +1,9 @@
-import util from 'util'
-import { exec } from 'child_process'
-import { watch, writeFile, readFile } from 'fs/promises'
-import path from 'path'
-import moralis from 'moralis'
+const util = require('util')
+const { exec } = require('child_process')
+const { watch, writeFile, readFile } = require('fs/promises')
+const path = require('path')
+
+const { TapeObject, Query, Object, File } = require('./moralis')
 
 const execAsync = util.promisify(exec)
 
@@ -58,25 +59,39 @@ async function makeJsonMetadata (e) {
 }
 
 async function uploadIpfs(filePath) {
-    return 'ipfs://'
+    const localFile = await readFile(path.join(__dirname, filePath))
+
+    console.log(localFile)
+
+    const fileName = path.basename(filePath)
+
+    const moralisFile = new File(fileName, {
+        base64: localFile.toString('base64')
+    })
+
+    await moralisFile.saveIPFS({ useMasterKey: true })
+
+    return moralisFile
 }
 
-async function saveMoralisVideo(tokenId, videoUrl) {
+async function saveMoralisVideo(tokenId, video) {
     const t = new TapeObject()
+    
+    const query = new Query(t)
 
-    const query = Query(t)
+    query.equalTo("tokenId", Number.parseInt(tokenId))
 
-    query.equalTo("tokenId", tokenId)
+    const tape = await query.first()
 
-    const results = await query.find()
+    if (!tape) {
+        throw 'saveMoralisVideo: cannot find tape with ID ' + tokenId
+    }
 
-    console.dir(results)
-
-    const tape = results[0]
-
-    tape.video = videoUrl
+    tape.set('video', video)
 
     await tape.save()
+
+    return tape
 }
 
 async function updateMoralisMetadata (e) {
@@ -132,13 +147,23 @@ async function watchTapes() {
         const tokenId = path.parse(e.filename).name
 
         const t = `Token #${tokenId}`
+    
+        console.time(t)
 
-        console.timeLog(t, 'found tape recording ... generate metadata')
+        console.timeLog(t, `found tape recording ... ${e.filename}`)
 
-        const url = await uploadIpfs()
+        try {
+            const video = await uploadIpfs(`tapes/${e.filename}`)
 
-        await saveMoralisVideo(tokenId, url)
+            console.timeLog(t, `uploaded to IPFS ... ${video.ipfs()}`)
 
+            const { id } = await saveMoralisVideo(tokenId, video)
+
+            console.timeLog(t, `updated metadata ... ${id}`)
+        } catch (e) {
+            console.timeLog(t, e.toString())
+        }
+    
         // await makeJsonMetadata(e)
 
         console.timeEnd(t)
@@ -146,10 +171,6 @@ async function watchTapes() {
 }
 
 async function main() {
-    moralis.initialize(
-        process
-    )
-
     watchAudio()
 
     watchShell()
