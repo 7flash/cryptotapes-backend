@@ -1,6 +1,7 @@
 import server from 'server'
 import fs from 'fs'
 import axios from 'axios'
+import path from 'path'
 
 const { get, post } = server.router
 
@@ -42,7 +43,7 @@ server({
             ethAddress,
             url
         })
-        
+
         return 'OK'
     })
 ])
