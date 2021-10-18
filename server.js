@@ -7,8 +7,14 @@ server({
     security: false
 }, [
     post('/record', (ctx) => {
-        console.dir(ctx)
+        const { audio } = ctx.body.object
         
+        const { ethAddress } = ctx.body.user
+
+        console.dir(audio, { depth: null })
+        
+        console.log({ ethAddress })
+    
         return 'OK'
     })
 ])
