@@ -31,7 +31,7 @@ server({
     port: 3001,
     security: false
 }, [
-    post('/record', async (ctx) => {
+    post('/afterSaveTape', async (ctx) => {
         const { audio, tokenId } = ctx.body.object
         
         const { ethAddress } = ctx.body.user
