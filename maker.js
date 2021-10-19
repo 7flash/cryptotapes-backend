@@ -7,26 +7,26 @@ const { TapeObject, Query, Object, File } = require('./moralis')
 
 const execAsync = util.promisify(exec)
 
-async function makeShellScript (e) {
+async function makeShellScript (e, resultPath) {
     const tokenId = path.parse(e.filename).name
 
     const shellScript = `
-#!/bin/bash
-
 docker run -v $(pwd):$(pwd) -w $(pwd) \
 jrottenberg/ffmpeg -stats \
 -i assets/video.webm \
 -i audio/${e.filename} \
 -map 0:0 \
 -map 1:0 \
-tapes/${tokenId}.webm
+${resultPath}
 `
 
-    const shellScriptPath = `shell/${tokenId}.sh`
+    return shellScript
 
-    await writeFile(shellScriptPath, shellScript)
+    // const shellScriptPath = `shell/${tokenId}.sh`
 
-    return shellScriptPath
+    // await writeFile(shellScriptPath, shellScript)
+
+    // return shellScriptPath
 }
 
 function sleep() {
@@ -35,14 +35,16 @@ function sleep() {
     })
 }
 
-async function makeTapeRecording (e) {
-    await sleep()
+function makeTapeRecording (cmd) {
+    return new Promise((resolve, reject) => {
+        exec(cmd, (error, stdout, stderr) => {
+            if (error) {
+                return reject('failed processing ... already exists?')
+            }
 
-    const cmd = `sh shell/${e.filename}`
-
-    console.log(cmd)
-
-    const { stdout, stderr } = await execAsync(cmd)
+            resolve(stdout.trim())
+        })
+    })
 }
 
 async function makeJsonMetadata (e) {
@@ -61,15 +63,13 @@ async function makeJsonMetadata (e) {
 async function uploadIpfs(filePath) {
     const localFile = await readFile(path.join(__dirname, filePath))
 
-    console.log(localFile)
-
     const fileName = path.basename(filePath)
 
     const moralisFile = new File(fileName, {
         base64: localFile.toString('base64')
     })
 
-    await moralisFile.saveIPFS({ useMasterKey: true })
+    await moralisFile.save({ useMasterKey: true })
 
     return moralisFile
 }
@@ -116,64 +116,72 @@ async function watchAudio() {
 
         console.time(t)
 
-        console.timeLog(t, `found new audio file ... ${new Date().toUTCString()}`)
-    
-        await makeShellScript(e)
-    }
-}
-
-async function watchShell() {
-    const shell = watch('shell')
-
-    for await (const e of shell) {
-        if (e.eventType !== 'rename') continue;
-
-        const tokenId = path.parse(e.filename).name
-
-        const t = `Token #${tokenId}`
-
-        console.timeLog(t, `found shell script ... generate tape recording`)
-
-        await makeTapeRecording(e)
-    }
-}
-
-async function watchTapes() {
-    const tapes = watch('tapes')
-
-    for await (const e of tapes) {
-        if (e.eventType !== 'rename') continue;
-
-        const tokenId = path.parse(e.filename).name
-
-        const t = `Token #${tokenId}`
-    
-        console.timeLog(t, `found tape recording ... ${e.filename}`)
-
         try {
-            const video = await uploadIpfs(`tapes/${e.filename}`)
+            console.timeLog(t, `found new audio file ... ${new Date().toUTCString()}`)
+        
+            const localVideoFile = `tapes/${tokenId}.webm`
 
-            console.timeLog(t, `uploaded to IPFS ... ${video.ipfs()}`)
+            const shell = await makeShellScript(e, localVideoFile)
 
-            const { id } = await saveMoralisVideo(tokenId, video)
+            console.timeLog(t, `prepared shell script... ${shell.substring(shell.length - 13)}`)
+
+            const logs = await makeTapeRecording(shell)
+
+            console.timeLog(t, `combined video tape recording ... ` + localVideoFile)
+
+            const remoteVideoFile = await uploadIpfs(localVideoFile) // `tapes/${e.filename}`
+
+            console.timeLog(t, `uploaded to IPFS ... ${remoteVideoFile.url()}`) // remoteVideoFile.ipfs()
+
+            const { id } = await saveMoralisVideo(tokenId, remoteVideoFile)
 
             console.timeLog(t, `updated metadata ... ${id}`)
         } catch (e) {
             console.timeLog(t, e.toString())
         }
     
-        // await makeJsonMetadata(e)
-
-        console.timeEnd(t)
     }
 }
+
+// async function watchShell() {
+//     const shell = watch('shell')
+
+//     for await (const e of shell) {
+//         if (e.eventType !== 'rename') continue;
+
+//         const tokenId = path.parse(e.filename).name
+
+//         const t = `Token #${tokenId}`
+
+//         console.timeLog(t, `found shell script ... generate tape recording`)
+
+//         await makeTapeRecording(e)
+//     }
+// }
+
+// async function watchTapes() {
+//     const tapes = watch('tapes')
+
+//     for await (const e of tapes) {
+//         if (e.eventType !== 'rename') continue;
+
+//         const tokenId = path.parse(e.filename).name
+
+//         const t = `Token #${tokenId}`
+    
+
+//         // await makeJsonMetadata(e)
+
+//         console.timeEnd(t)
+//     }
+// }
 
 async function main() {
     watchAudio()
 
-    watchShell()
+    // watchShell()
 
-    watchTapes()
+    // watchTapes()
 
     console.log(`tapes maker is running... ${new Date().toUTCString()}`)
 }
