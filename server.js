@@ -72,17 +72,19 @@ server({
     }),
 
     post('/afterSaveTape', async (ctx) => {
-        const { audio, tokenId } = ctx.body.object
+        try {
+            const { audio, tokenId } = ctx.body.object
         
-        const { ethAddress } = ctx.body.user
-
-        const { url } = audio
-
-        saveAudio({
-            tokenId,
-            ethAddress,
-            url
-        })
+            const { ethAddress } = ctx.body.user
+    
+            const { url } = audio
+    
+            saveAudio({
+                tokenId,
+                ethAddress,
+                url
+            })    
+        } catch (e) {}
 
         return 'OK'
     })
