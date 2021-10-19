@@ -29,11 +29,13 @@ ${resultPath}
     // return shellScriptPath
 }
 
-function sleep() {
+function sleep(s) {
     return new Promise(function (resolve) {
-        setTimeout(resolve, 1000)
+        setTimeout(resolve, 1000 * s)
     })
 }
+
+// move to server.js instead
 
 function makeTapeRecording (cmd) {
     return new Promise((resolve, reject) => {
@@ -120,6 +122,8 @@ async function watchAudio() {
             console.timeLog(t, `found new audio file ... ${new Date().toUTCString()}`)
         
             const localVideoFile = `tapes/${tokenId}.webm`
+
+            await sleep(15)
 
             const shell = await makeShellScript(e, localVideoFile)
 
