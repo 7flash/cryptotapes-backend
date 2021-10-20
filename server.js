@@ -46,8 +46,8 @@ server({
         if (tape) {
             return {
                 'name': tape.get('title'),
-                'image': tape.get('video').ipfs(),
-                'external_url': tape.get('video').ipfs(),
+                'image': tape.get('video').url(),
+                'external_url': tape.get('video').url(),
                 'description': tape.get('lyrics'),
                 'attributes': [
                     {
