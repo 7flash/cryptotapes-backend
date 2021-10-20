@@ -43,7 +43,8 @@ const emptyTapeMetadata = {
 
 const sampleTapeMetadata = {
     "name": "Sample Song",
-    "image": "https://gateway.pinata.cloud/ipfs/QmW9GUSf2u8S6q96KAr1Umq1J3c7vpXHJQVJhP6kma5Fr4",
+    "image": "https://gateway.pinata.cloud/ipfs/QmVgHb2gUgKbmNFmfLBor1iyNdSWFW1UVJmvideSWUAjXN",
+    "animation_url": "https://gateway.pinata.cloud/ipfs/QmW9GUSf2u8S6q96KAr1Umq1J3c7vpXHJQVJhP6kma5Fr4",
     "external_url": "https://api.cryptotaperecordings.com/token/1",
     "description": `
     J'ai cherché Agapé, j'ai cherché Agapé, j'ai cherché Agapé 
@@ -65,17 +66,8 @@ J'ai cherché Agapé, j'ai cherché Agapé, j'ai cherché Agapé
 
 const contractMetadata = {
     "name": "Crypto Tape Recordings",
-    "description": `
-    10 thousand unique tape recordings immutably minted on the Ethereum Blockchain. 
-The crypto tape recordings project is a user-generated NFT audio experiment whereby participants can add a unique voice recording to the metadata of their NFT. 
-
-The generated NFT is a video of our CTR10000 tape recorder containing each user’s voice recording, the lyrics of their recording, and the title. 
-
-Our goal is to find out how far we can take a user-generated experiment. We believe everyone is unique and has extraordinary creative powers when you connect with your primal inclinations. We hope unique, stories, songs, poems, raps and spoken words are added to the user’s own NFT and that a thriving community erupts that are using these vocals and lyrics in tracks, merch, memes…
-
-Participants have agreed that their recording becomes public domain and be released under creative commons license. Meaning everyone is free to create derivative works from your recording. This free use of creative material is ultimately how value flows back to your NFT and increases the power of this community…
-    `,
-    "image": "https://gateway.pinata.cloud/ipfs/QmT2tGGknubS36nqGKeXC5kqXbipktNNtfcAR33D5c7PPo",
+    "description": "Crypto Tape Recordings",
+    "image": "https://lh3.googleusercontent.com/vTSa1cI53mEPhAZPt4K2ZfB7kvXycO3ZiWMDoNwTAeFQYx48oA25cf1_3k6yRc7EXwWgDnxVaBukRR2RI8e0Och1zFCdBlmzGfPub_w",
     "external_link": "https://cryptotaperecordings.com",
     "seller_fee_basis_points": 100,
     "fee_recipient": "0x583Bf0Dc5a0e8FcCbCE42c946a03690f961AD2F8"
