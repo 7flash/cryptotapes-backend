@@ -1,14 +1,7 @@
 const moralis = require('moralis/node')
+const TapeObject = require('./tapeObject')
 
 require('dotenv').config()
-
-class TapeObject extends moralis.Object {
-    static tableName = 'Tapes'
-
-    constructor() {
-        super(TapeObject.tableName)
-    }
-}
 
 moralis.initialize(
     process.env.MORALIS_APP_ID,
@@ -21,9 +14,4 @@ moralis.masterKey = process.env.MORALIS_KEY
 
 moralis.Object.registerSubclass(TapeObject.tableName, TapeObject)
 
-module.exports = {
-    TapeObject: TapeObject,
-    Query: moralis.Query,
-    Object: moralis.Object,
-    File: moralis.File
-}
+module.exports = moralis

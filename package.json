@@ -5,17 +5,18 @@
   "main": "index.js",
   "scripts": {
     "clean": "sh clean.sh",
-    "pull": "git pull && npm run restart-server && npm run restart-maker && pm2 logs",
+    "pull": "git pull && npm run restart-server && npm run restart-process && pm2 logs",
     "push": "git add . && git commit -m \"update\" && git push",
     "start-server": "pm2 start --name server server.js && pm2 logs server",
     "restart-server": "pm2 restart --name server server.js --no-autorestart",
-    "start-maker": "pm2 start --name maker maker.js && pm2 logs maker",
-    "restart-maker": "pm2 restart --name maker maker.js --no-autorestart"
+    "start-process": "pm2 start --name process process.js && pm2 logs process",
+    "restart-process": "pm2 restart --name process process.js --no-autorestart"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.23.0",
+    "bull": "^3.29.3",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "moralis": "0.0.95",
