@@ -46,12 +46,7 @@ const sampleTapeMetadata = {
     "image": "https://gateway.pinata.cloud/ipfs/QmVgHb2gUgKbmNFmfLBor1iyNdSWFW1UVJmvideSWUAjXN",
     "animation_url": "https://gateway.pinata.cloud/ipfs/QmW9GUSf2u8S6q96KAr1Umq1J3c7vpXHJQVJhP6kma5Fr4",
     "external_url": "https://api.cryptotaperecordings.com/token/1",
-    "description": `
-    J'ai cherché Agapé, j'ai cherché Agapé, j'ai cherché Agapé 
-J'ai cherché Agapé, j'ai cherché Agapé, j'ai cherché Agapé 
-J'ai cherché Agapé, j'ai cherché Agapé, j'ai cherché Agapé 
-J'ai cherché Agapé, j'ai cherché Agapé, j'ai cherché Agapé 
-    `,
+    "description": "Sample Lyrics",
     "attributes": [
         {
             "trait_type": "rarity",
