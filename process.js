@@ -6,6 +6,7 @@ const saveAudioQueue = new Queue('save audio')
 const attachVideoQueue = new Queue('attach video')
 const uploadVideoQueue = new Queue('upload video')
 const updateMetadataQueue = new Queue('update metadata')
+const uploadQueue = new Queue('upload audio')
 
 saveAudioQueue.process(path.join(__dirname, `jobs/saveAudio`))
 attachVideoQueue.process(path.join(__dirname, './jobs/attachVideo'))
@@ -35,6 +36,19 @@ webhookQueue.addListener('completed', job => {
 
 webhookQueue.addListener('failed', job => {
     console.error(job.stacktrace)
+})
+
+uploadQueue.process(async job => {
+    const tokenId = 1
+
+    const audioFilePath = job.data.audioFilePath
+    
+    console.timeLog(tokenId, `completed upload audio ... ${audioFilePath}`)
+    
+    attachVideoQueue.add({
+        tokenId,
+        audioFilePath
+    })
 })
 
 saveAudioQueue.addListener('completed', job => {
@@ -105,14 +119,5 @@ updateMetadataQueue.addListener('failed', job => {
 
     console.timeLog(tokenId, job.stacktrace)
 })
-
-// webhookQueue.add({
-//     body: {
-//         object: {
-//             tokenId: 1,
-//             audio: { url: 'https://gateway.pinata.cloud/ipfs/QmV55qseMjrj8HdFhx2qmJ6XSpUXwisjafJkGJyfhDG5Rw' },
-//         },
-//     }
-// })
 
 console.log(`process has started ... ${new Date().toUTCString()}`)

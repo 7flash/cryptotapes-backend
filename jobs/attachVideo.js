@@ -6,6 +6,7 @@ const assetName = 'video.webm'
 const buildCommand = (input, output) => `
     docker run -v $(pwd):$(pwd) -w $(pwd) \
     jrottenberg/ffmpeg -stats \
+    -y \
     -i assets/${assetName} \
     -i ${input} \
     -map 0:0 \
