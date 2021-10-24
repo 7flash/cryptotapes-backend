@@ -42,6 +42,8 @@ uploadQueue.process(async job => {
     const tokenId = 1
 
     const audioFilePath = job.data.audioFilePath
+
+    console.time(tokenId)
     
     console.timeLog(tokenId, `completed upload audio ... ${audioFilePath}`)
     

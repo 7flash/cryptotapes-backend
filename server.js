@@ -45,6 +45,8 @@ server(
     }),
 
     post('/afterSaveTape', async (ctx) => {
+        console.log(`/afterSaveTape ${ctx.body.object.tokenId} ... ${new Date().toUTCString()}`)
+
         queue.add({
             body: ctx.body
         })
